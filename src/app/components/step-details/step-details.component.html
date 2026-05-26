@@ -30,8 +30,10 @@
         [disabled]="isCalendarExporting() || isLoading()"
       >
         @if (isCalendarExporting()) {
-          <mat-icon><mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner></mat-icon>
-          Export…
+          <ng-container>
+            <mat-icon><mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner></mat-icon>
+            Export…
+          </ng-container>
         } @else {
           <mat-icon>event_available</mat-icon>
           Exporter vers Google Cal
