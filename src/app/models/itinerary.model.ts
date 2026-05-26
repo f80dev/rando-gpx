@@ -80,6 +80,7 @@ export interface Accommodation {
   name: string;
   pricePerNight: number;
   coordinates: [number, number];
+  address?: string;
   rating: number;             // 1-5
   type: AccommodationType;
   trainStationNearby: boolean;

@@ -8,6 +8,36 @@
       <button mat-stroked-button (click)="goBack()">
         <mat-icon>arrow_back</mat-icon> Retour
       </button>
+
+      <!-- Google Calendar auth -->
+      @if (calendarService.isAuthenticated()) {
+        <button mat-stroked-button (click)="onGoogleAuth()" class="auth-btn connected">
+          <mat-icon>check_circle</mat-icon>
+          {{ calendarService.userEmail() }}
+        </button>
+      } @else {
+        <button mat-stroked-button (click)="onGoogleAuth()" class="auth-btn">
+          <mat-icon>calendar_month</mat-icon>
+          Google Calendar
+        </button>
+      }
+
+      <!-- Export to Google Calendar -->
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="onExportToCalendar()"
+        [disabled]="isCalendarExporting() || isLoading()"
+      >
+        @if (isCalendarExporting()) {
+          <mat-icon><mat-spinner diameter="18"></mat-spinner></mat-icon>
+          Export…
+        } @else {
+          <mat-icon>event_available</mat-icon>
+          Exporter vers Google Cal
+        }
+      </button>
+
       <button mat-raised-button color="primary" (click)="openExportDialog()">
         <mat-icon>download</mat-icon> Exporter
       </button>

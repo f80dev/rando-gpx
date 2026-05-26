@@ -1,0 +1,109 @@
+<h2 mat-dialog-title>
+  <mat-icon>restaurant</mat-icon>
+  {{ data.slot === 'lunch' ? 'Déjeuner' : 'Dîner' }} — Rechercher
+</h2>
+
+<mat-dialog-content>
+  @if (hasApiKey) {
+    <!-- Google Places live search -->
+    <div class="google-search">
+      <div class="search-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Restaurant, café…</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (keyup.enter)="doGoogleSearch()" placeholder="Type ou nom…" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="doGoogleSearch()" [disabled]="isGoogleLoading()">
+          <mat-icon>travel_explore</mat-icon>
+          Google
+        </button>
+      </div>
+
+      @if (isGoogleLoading()) {
+        <div class="loading">
+          <mat-spinner diameter="32"></mat-spinner>
+          <span>Recherche en cours…</span>
+        </div>
+      }
+
+      @if (googleError()) {
+        <div class="error-msg">
+          <mat-icon>error_outline</mat-icon>
+          {{ googleError() }}
+        </div>
+      }
+
+      @if (googleResults.length > 0) {
+        <div class="results-title">{{ googleResults.length }} résultats trouvés</div>
+        <div class="google-results">
+          @for (place of googleResults; track place.placeId) {
+            <div
+              class="result-item"
+              [class.selected]="selectedId === 'gp-' + place.placeId"
+              (click)="selectGoogleResult(place)"
+            >
+              <div class="result-icon">
+                <mat-icon>restaurant</mat-icon>
+              </div>
+              <div class="result-info">
+                <strong>{{ place.name }}</strong>
+                <span class="address">{{ place.address }}</span>
+                <div class="meta">
+                  @if (place.rating > 0) {
+                    <span class="rating">★ {{ place.rating }}</span>
+                  }
+                  @if (place.priceLevel >= 0) {
+                    <span class="price">{{ formatPrice(place.priceLevel) }}</span>
+                  }
+                  @if (place.userRatingsTotal > 0) {
+                    <span class="reviews">({{ place.userRatingsTotal }} avis)</span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <mat-divider></mat-divider>
+    <p class="divider-label">— OU — Base locale</p>
+  }
+
+  <!-- Local mock search -->
+  <div class="local-search" [class.disabled]="hasApiKey">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Base locale</mat-label>
+      <input matInput [(ngModel)]="searchQuery" (ngModelChange)="filterMeals()" placeholder="Rechercher…" />
+      <mat-icon matSuffix>local_dining</mat-icon>
+    </mat-form-field>
+
+    @if (!hasApiKey) {
+      <div class="local-results">
+        @for (meal of filteredMeals; track meal.id) {
+          <div
+            class="meal-item"
+            [class.selected]="selectedId === meal.id"
+            (click)="onLocalSelect(meal)"
+          >
+            <div class="meal-info">
+              <strong>{{ meal.name }}</strong>
+              <span>{{ meal.type }} — {{ meal.description }}</span>
+            </div>
+            <div class="meal-price">{{ meal.price }}€</div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="local-hint">Utilisez le bouton Google ci-dessus pour une recherche en direct.</p>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" [disabled]="!selectedMeal" (click)="onConfirm()">
+    <mat-icon>check</mat-icon>
+    Valider
+  </button>
+</mat-dialog-actions>

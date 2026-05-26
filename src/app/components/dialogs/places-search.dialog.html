@@ -1,0 +1,118 @@
+<div class="places-search-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>place</mat-icon>
+    Recherche de lieux — {{ data.stageName }}
+  </h2>
+
+  <mat-dialog-content>
+    <!-- Recherche -->
+    <div class="search-controls">
+      <div class="search-row">
+        <mat-form-field appearance="outline" class="query-field">
+          <mat-label>Type ou nom</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (keyup.enter)="doSearch()"
+            placeholder="ex: restaurant, café, hôtel…" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="type-field">
+          <mat-label>Catégorie</mat-label>
+          <mat-select [(ngModel)]="selectedType">
+            @for (t of placeTypes; track t.value) {
+              <mat-option [value]="t.value">{{ t.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="radius-row">
+        <span class="radius-label">Rayon : {{ radiusKm }} km</span>
+        <mat-slider min="1" max="20" step="1" class="radius-slider">
+          <input matSliderThumb [(ngModel)]="radiusKm" />
+        </mat-slider>
+      </div>
+
+      <button mat-raised-button color="primary" (click)="doSearch()" [disabled]="isLoading()">
+        <mat-icon>search</mat-icon>
+        Rechercher
+      </button>
+    </div>
+
+    <!-- Coordonnées -->
+    <p class="coordinates">
+      <mat-icon small>my_location</mat-icon>
+      {{ data.center.lat.toFixed(4) }}, {{ data.center.lng.toFixed(4) }}
+    </p>
+
+    <!-- Loading -->
+    @if (isLoading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Recherche en cours…</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="error-state">
+        <mat-icon>error_outline</mat-icon>
+        <p>{{ error() }}</p>
+        <button mat-stroked-button (click)="doSearch()">Réessayer</button>
+      </div>
+    }
+
+    <!-- Results -->
+    @if (!isLoading() && results.length > 0) {
+      <div class="results-header">
+        <span>{{ results.length }} résultats</span>
+      </div>
+      <div class="places-results">
+        @for (place of results; track place['placeId']) {
+          <div
+            class="place-result-item"
+            [class.selected]="selectedPlace()?.['placeId'] === place['placeId']"
+            (click)="onSelect(place)"
+          >
+            <div class="place-icon">
+              <mat-icon>{{ getTypeIcon(place['types']) }}</mat-icon>
+            </div>
+            <div class="place-info">
+              <strong class="place-name">{{ place['name'] }}</strong>
+              <span class="place-address">{{ place['address'] }}</span>
+              <div class="place-meta">
+                @if (place['rating'] > 0) {
+                  <span class="place-rating">
+                    <mat-icon small>star</mat-icon>
+                    {{ place['rating'] }}
+                  </span>
+                }
+                @if (place['priceLevel'] >= 0) {
+                  <span class="place-price">{{ formatPriceLevel(place['priceLevel']) }}</span>
+                }
+                @for (type of place['types'].slice(0, 2); track type) {
+                  <mat-chip size="small">{{ type }}</mat-chip>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Empty state -->
+    @if (!isLoading() && !error() && results.length === 0 && searchQuery === '') {
+      <div class="empty-state">
+        <mat-icon>explore</mat-icon>
+        <p>Saisissez un type de lieu ou un nom pour lancer la recherche.</p>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Annuler</button>
+    <button mat-raised-button color="primary" [disabled]="!selectedPlace()" (click)="onConfirm()">
+      <mat-icon>check</mat-icon>
+      Valider
+    </button>
+  </mat-dialog-actions>
+</div>
