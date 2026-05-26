@@ -17,6 +17,10 @@ Thumbs.db
 # Build
 *.tgz
 
+# Database
+*.db
+*.sqlite
+
 # Environment
 .env
 .env.local

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -14,8 +14,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ItineraryService } from '../../services/itinerary.service';
 import { GpxParserService } from '../../services/gpx-parser.service';
+import { CommunesService, TraceCommune } from '../../services/communes.service';
 import { GpxMapComponent } from '../gpx-map/gpx-map.component';
 import { FileDropZoneComponent } from '../file-drop-zone/file-drop-zone.component';
 import { GpxData, ActivityType } from '../../models/itinerary.model';
@@ -39,15 +41,18 @@ import { GpxData, ActivityType } from '../../models/itinerary.model';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
     GpxMapComponent,
     FileDropZoneComponent,
   ],
   templateUrl: './step-preferences.component.html',
   styleUrl: './step-preferences.component.scss',
 })
-export class StepPreferencesComponent {
+export class StepPreferencesComponent implements OnInit {
   private itineraryService = inject(ItineraryService);
   private gpxParser = inject(GpxParserService);
+  private communesService = inject(CommunesService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
@@ -55,6 +60,9 @@ export class StepPreferencesComponent {
   form: FormGroup;
   gpxData = signal<GpxData | null>(null);
   isLoadingGpx = signal(false);
+  communes = signal<TraceCommune[]>([]);
+  isLoadingCommunes = signal(false);
+  apiConnected = signal<boolean | null>(null); // null = pas encore testé
 
   readonly minDate = new Date();
 
@@ -74,13 +82,37 @@ export class StepPreferencesComponent {
     });
   }
 
+  ngOnInit(): void {
+    // Test de connexion API au chargement de la page
+    this.communesService.ping().subscribe({
+      next: () => this.apiConnected.set(true),
+      error: () => this.apiConnected.set(false),
+    });
+  }
+
   onGpxFileSelected(file: File): void {
     this.isLoadingGpx.set(true);
+    this.communes.set([]);
     this.gpxParser.parseGpx(file).subscribe({
       next: (data) => {
         this.gpxData.set(data);
         this.isLoadingGpx.set(false);
         this.itineraryService.setGpxData(data);
+
+        // Appeler l'API communes en parallèle
+        this.isLoadingCommunes.set(true);
+        console.log('[DEBUG] Envoi GPX à:', this.communesService.getApiUrl() + '/api/trace/communes');
+        this.communesService.getCommunes(file).subscribe({
+          next: (resp) => {
+            this.communes.set(resp.communes);
+            this.isLoadingCommunes.set(false);
+          },
+          error: (err) => {
+            this.isLoadingCommunes.set(false);
+            const msg = err.error?.error ?? err.message ?? 'Erreur inconnue';
+            console.warn('Communes API error:', err.status, msg);
+          },
+        });
       },
       error: (err) => {
         this.isLoadingGpx.set(false);

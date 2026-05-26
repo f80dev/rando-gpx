@@ -2,16 +2,25 @@
   <div class="page-header">
     <h1>Créer votre programme</h1>
     <p>Importez votre trace GPX et définissez vos préférences de voyage</p>
+    @if (apiConnected() !== null) {
+      <div class="api-status" [class.connected]="apiConnected()" [class.disconnected]="!apiConnected()">
+        <mat-icon>{{ apiConnected() ? 'cloud_done' : 'cloud_off' }}</mat-icon>
+        <span>{{ apiConnected() ? 'API connectée' : 'API indisponible' }}</span>
+      </div>
+    }
   </div>
 
   <div class="content-grid">
     <!-- Colonne gauche : Import GPX -->
     <div class="column gpx-column">
       <h2>Votre trace GPX</h2>
-      <app-file-drop-zone
-        (fileSelected)="onGpxFileSelected($event)"
-        (error)="onGpxError($event)"
-      />
+
+      @if (!gpxData()) {
+        <app-file-drop-zone
+          (fileSelected)="onGpxFileSelected($event)"
+          (error)="onGpxError($event)"
+        />
+      }
 
       @if (gpxData()) {
         <div class="gpx-preview">
@@ -36,6 +45,67 @@
             </div>
           </div>
           <p class="gpx-name">{{ gpxData()!.name }}</p>
+        </div>
+      }
+
+      <!-- Villes traversées -->
+      @if (gpxData()) {
+        <div class="communes-section">
+          <h3>
+            <mat-icon>location_city</mat-icon>
+            Villes traversées
+            @if (isLoadingCommunes()) {
+              <mat-spinner diameter="16" />
+            }
+          </h3>
+
+          @if (!isLoadingCommunes() && communes().length > 0) {
+            <p class="communes-hint">Cliquez sur une ville pour voir le détail</p>
+            <ul class="communes-list">
+              @for (commune of communes(); track commune.code_insee) {
+                <li class="commune-item">
+                  <div class="commune-main">
+                    <div class="commune-name">{{ commune.nom }}</div>
+                    <div class="commune-meta">
+                      <span class="cp">{{ commune.code_postal }}</span>
+                      @if (commune.population) {
+                        <span class="pop">{{ commune.population | number }} hab.</span>
+                      }
+                      @if (commune.poi_count) {
+                        <span class="poi-count">{{ commune.poi_count }} POIs</span>
+                      }
+                    </div>
+                  </div>
+                  @if (commune.attractivite_score !== undefined) {
+                    <div class="commune-score" [class.high]="commune.attractivite_score! > 100"
+                         [class.medium]="commune.attractivite_score! > 30 && commune.attractivite_score! <= 100">
+                      <span class="score-value">{{ commune.attractivite_score }}</span>
+                      <span class="score-label">attract.</span>
+                      @if (commune.score_breakdown) {
+                        <div class="score-detail">
+                          @if (commune.score_breakdown.patrimoine !== '0×8=0') {
+                            <span class="breakdown pat">Pat. {{ commune.score_breakdown.patrimoine }}</span>
+                          }
+                          @if (commune.score_breakdown.nature !== '0×4=0') {
+                            <span class="breakdown nat">Nat. {{ commune.score_breakdown.nature }}</span>
+                          }
+                          @if (commune.score_breakdown.restauration !== '0×2=0') {
+                            <span class="breakdown rest">Rest. {{ commune.score_breakdown.restauration }}</span>
+                          }
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="commune-score no-data">—</div>
+                  }
+                </li>
+              }
+            </ul>
+          }
+
+          @if (!isLoadingCommunes() && communes().length === 0 && gpxData()) {
+            <p class="communes-empty">Aucune commune trouvée pour cette trace.</p>
+          }
         </div>
       }
     </div>
