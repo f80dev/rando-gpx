@@ -30,7 +30,7 @@
         [disabled]="isCalendarExporting() || isLoading()"
       >
         @if (isCalendarExporting()) {
-          <mat-icon><mat-spinner diameter="18"></mat-spinner></mat-icon>
+          <mat-icon><mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner></mat-icon>
           Export…
         } @else {
           <mat-icon>event_available</mat-icon>
@@ -52,6 +52,7 @@
 
   <!-- Contenu 3 colonnes (desktop) / tabs (mobile) -->
   <div class="details-grid">
+
     <!-- Colonne hébergements -->
     <div class="column acc-column">
       <h2 class="column-title">Hébergements</h2>
@@ -66,13 +67,22 @@
           @if (getAccommodationForStage(stage.id); as acc) {
             <app-accommodation-card
               [accommodation]="acc"
-              (change)="onChangeAccommodation($event)"
+              (change)="onChangeAccommodation(stage.id)"
             />
           } @else {
             <div class="no-accommodation">
               <p>Aucun hébergement trouvé</p>
             </div>
           }
+          <!-- Bouton d'ajout / modification hébergement via Google Places -->
+          <button
+            mat-stroked-button
+            class="add-place-btn"
+            (click)="onChangeAccommodation(stage.id)"
+          >
+            <mat-icon>add_location</mat-icon>
+            {{ getAccommodationForStage(stage.id) ? 'Modifier' : 'Ajouter' }} un hébergement
+          </button>
         </div>
       }
     </div>
@@ -102,16 +112,45 @@
           <p class="stage-label">{{ stage.name }}</p>
           <div class="meal-slots">
             @if (getMealsForStage(stage.id); as mealsData) {
-              <app-meal-slot
-                [meal]="mealsData.lunch"
-                slot="lunch"
-                (change)="onChangeMeal($event, stage.id, 'lunch')"
-              />
-              <app-meal-slot
-                [meal]="mealsData.dinner"
-                slot="dinner"
-                (change)="onChangeMeal($event, stage.id, 'dinner')"
-              />
+              <!-- Déjeuner -->
+              <div class="meal-slot-row">
+                <div class="meal-slot-label">
+                  <mat-icon>wb_sunny</mat-icon> Midi
+                </div>
+                <app-meal-slot
+                  [meal]="mealsData.lunch"
+                  slot="lunch"
+                  (change)="onChangeMeal(stage.id, 'lunch')"
+                />
+                <button
+                  mat-icon-button
+                  class="add-meal-btn"
+                  (click)="onChangeMeal(stage.id, 'lunch')"
+                  title="Rechercher un lieu pour le déjeuner"
+                >
+                  <mat-icon>add_location</mat-icon>
+                </button>
+              </div>
+
+              <!-- Dîner -->
+              <div class="meal-slot-row">
+                <div class="meal-slot-label">
+                  <mat-icon>nights_stay</mat-icon> Soir
+                </div>
+                <app-meal-slot
+                  [meal]="mealsData.dinner"
+                  slot="dinner"
+                  (change)="onChangeMeal(stage.id, 'dinner')"
+                />
+                <button
+                  mat-icon-button
+                  class="add-meal-btn"
+                  (click)="onChangeMeal(stage.id, 'dinner')"
+                  title="Rechercher un lieu pour le dîner"
+                >
+                  <mat-icon>add_location</mat-icon>
+                </button>
+              </div>
             }
           </div>
         </div>

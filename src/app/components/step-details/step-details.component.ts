@@ -18,7 +18,8 @@ import { MealSlotComponent } from '../meal-slot/meal-slot.component';
 import { ItinerarySummaryComponent } from '../itinerary-summary/itinerary-summary.component';
 import { ExportDialogComponent } from '../dialogs/export.dialog';
 import { MealSearchDialogComponent } from '../dialogs/meal-search.dialog';
-import { Accommodation, Meal } from '../../models/itinerary.model';
+import { PlacesSearchDialogComponent, PlaceSearchResult } from '../dialogs/places-search.dialog';
+import { Accommodation, Meal, MealSlot } from '../../models/itinerary.model';
 
 @Component({
   selector: 'app-step-details',
@@ -82,9 +83,7 @@ export class StepDetailsComponent implements OnInit, OnDestroy {
           this.itineraryService.setAccommodations(accommodations);
           this.itineraryService.setMeals(meals);
           this.isLoading.set(false);
-          this.snackBar.open('Hébergements et repas générés !', 'Fermer', {
-            duration: 3000,
-          });
+          this.snackBar.open('Hébergements et repas générés !', 'Fermer', { duration: 3000 });
         },
         error: (err) => {
           this.isLoading.set(false);
@@ -109,41 +108,105 @@ export class StepDetailsComponent implements OnInit, OnDestroy {
     };
   }
 
-  onChangeAccommodation(accommodation: Accommodation): void {
-    this.snackBar.open(
-      `Changer l'hébergement pour "${accommodation.name}" — à implémenter`,
-      'Fermer',
-      { duration: 3000 }
-    );
+  /**
+   * Open Places search dialog for accommodation — pre-fills slot='accommodation'
+   * and processes the PlaceSearchResult to update the itinerary.
+   */
+  onChangeAccommodation(stageId: string): void {
+    const stage = this.stages().find((s) => s.id === stageId);
+    const coords = stage?.endPoint;
+    const center = coords
+      ? { lat: coords[1], lng: coords[0] }
+      : { lat: 46.6, lng: 2.5 };
+
+    const dialogRef = this.dialog.open(PlacesSearchDialogComponent, {
+      width: '520px',
+      data: {
+        stageId,
+        center,
+        stageName: stage?.name ?? '',
+        slot: 'accommodation' as const,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: PlaceSearchResult | undefined) => {
+      if (!result || result.action !== 'select' || !result.accommodation) return;
+      const acc = result.accommodation;
+
+      // Check if accommodation for this stage already exists → update, else add
+      const existing = this.getAccommodationForStage(stageId);
+      if (existing) {
+        this.itineraryService.updateAccommodation(existing.id, acc);
+      } else {
+        // Append to accommodations array
+        const all = this.itineraryService.accommodations();
+        this.itineraryService.setAccommodations([...all, acc]);
+      }
+      this.snackBar.open(`✓ ${acc.name} ajouté`, 'Fermer', { duration: 3000 });
+    });
   }
 
-  onChangeMeal(meal: Meal | null, stageId: string, slot: 'lunch' | 'dinner'): void {
+  /**
+   * Open Places search dialog for a specific meal slot (lunch/dinner).
+   */
+  onChangeMeal(stageId: string, slot: MealSlot): void {
     const stage = this.stages().find((s) => s.id === stageId);
-    const stageCoords = stage?.endPoint;
+    const coords = stage?.endPoint;
     const acc = this.getAccommodationForStage(stageId);
-    // Use accommodation coords if available, else stage coords, else default
     const center = acc?.coordinates
       ? { lat: acc.coordinates[1], lng: acc.coordinates[0] }
-      : stageCoords
-        ? { lat: stageCoords[1], lng: stageCoords[0] }
-        : { lat: 46.6, lng: 2.5 }; // fallback France center
+      : coords
+        ? { lat: coords[1], lng: coords[0] }
+        : { lat: 46.6, lng: 2.5 };
+
+    const dialogRef = this.dialog.open(PlacesSearchDialogComponent, {
+      width: '520px',
+      data: { stageId, slot, center, stageName: stage?.name ?? '' },
+    });
+
+    dialogRef.afterClosed().subscribe((result: PlaceSearchResult | undefined) => {
+      if (!result || result.action !== 'select' || !result.meal) return;
+      const meal = result.meal;
+
+      // Check if meal for this stage+slot already exists → update, else add
+      const existing = this.meals().find(
+        (m) => m.stageId === stageId && m.slot === slot
+      );
+      if (existing) {
+        this.itineraryService.updateMeal(existing.id, meal);
+      } else {
+        const all = this.itineraryService.meals();
+        this.itineraryService.setMeals([...all, meal]);
+      }
+      this.snackBar.open(`✓ ${meal.name} ajouté`, 'Fermer', { duration: 3000 });
+    });
+  }
+
+  /**
+   * Legacy fallback: open the old MealSearchDialog (mock + Google Places).
+   * Kept for backward compat; prefer onChangeMeal() using PlacesSearchDialog.
+   */
+  onChangeMealLegacy(meal: Meal | null, stageId: string, slot: 'lunch' | 'dinner'): void {
+    const stage = this.stages().find((s) => s.id === stageId);
+    const coords = stage?.endPoint;
+    const acc = this.getAccommodationForStage(stageId);
+    const center = acc?.coordinates
+      ? { lat: acc.coordinates[1], lng: acc.coordinates[0] }
+      : coords
+        ? { lat: coords[1], lng: coords[0] }
+        : { lat: 46.6, lng: 2.5 };
 
     const dialogRef = this.dialog.open(MealSearchDialogComponent, {
       width: '480px',
       data: { stageId, slot, center },
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.itineraryService.updateMeal(result.id, result);
-      }
+    dialogRef.afterClosed().subscribe((result: Meal | null) => {
+      if (result) this.itineraryService.updateMeal(result.id, result);
     });
   }
 
   openExportDialog(): void {
-    this.dialog.open(ExportDialogComponent, {
-      width: '400px',
-      data: {},
-    });
+    this.dialog.open(ExportDialogComponent, { width: '400px', data: {} });
   }
 
   async onGoogleAuth(): Promise<void> {
@@ -152,11 +215,11 @@ export class StepDetailsComponent implements OnInit, OnDestroy {
       this.snackBar.open('Déconnecté de Google Calendar', 'Fermer', { duration: 3000 });
     } else {
       const success = await this.calendarService.signIn();
-      if (success) {
-        this.snackBar.open('Connecté à Google Calendar !', 'Fermer', { duration: 3000 });
-      } else {
-        this.snackBar.open('Échec de la connexion Google', 'Fermer', { duration: 5000 });
-      }
+      this.snackBar.open(
+        success ? 'Connecté à Google Calendar !' : 'Échec de la connexion Google',
+        'Fermer',
+        { duration: success ? 3000 : 5000 }
+      );
     }
   }
 
@@ -173,17 +236,11 @@ export class StepDetailsComponent implements OnInit, OnDestroy {
     const numDays = prefs.numberOfDays ?? stages.length;
     const endDate = new Date(
       new Date(startDate).getTime() + (numDays - 1) * 24 * 60 * 60 * 1000
-    )
-      .toISOString()
-      .split('T')[0];
+    ).toISOString().split('T')[0];
 
-    // Enrich stages with date and accommodation info
     const enrichedStages = stages.map((s, i) => {
-      const stageDate = new Date(
-        new Date(startDate).getTime() + i * 24 * 60 * 60 * 1000
-      )
-        .toISOString()
-        .split('T')[0];
+      const stageDate = new Date(new Date(startDate).getTime() + i * 24 * 60 * 60 * 1000)
+        .toISOString().split('T')[0];
       const acc = this.getAccommodationForStage(s.id);
       const meals = this.getMealsForStage(s.id);
       return {
@@ -192,15 +249,9 @@ export class StepDetailsComponent implements OnInit, OnDestroy {
         date: stageDate,
         distance: s.distance,
         elevation: s.elevationGain,
-        accommodation: acc
-          ? { name: acc.name, address: acc.address ?? '' }
-          : undefined,
-        lunch: meals.lunch
-          ? { name: meals.lunch.name, address: meals.lunch.description ?? '' }
-          : undefined,
-        dinner: meals.dinner
-          ? { name: meals.dinner.name, address: meals.dinner.description ?? '' }
-          : undefined,
+        accommodation: acc ? { name: acc.name, address: acc.address ?? '' } : undefined,
+        lunch: meals.lunch ? { name: meals.lunch.name, address: meals.lunch.description ?? '' } : undefined,
+        dinner: meals.dinner ? { name: meals.dinner.name, address: meals.dinner.description ?? '' } : undefined,
       };
     });
 
@@ -214,13 +265,14 @@ export class StepDetailsComponent implements OnInit, OnDestroy {
     this.isCalendarExporting.set(false);
 
     if (result.status === 'success') {
-      this.snackBar.open(
-        `✓ Calendrier exporté ! ${result.htmlLink ? 'Ouvrir ?' : ''}`,
+      const snack = this.snackBar.open(
+        `✓ Calendrier exporté !${result.htmlLink ? ' Ouvrir ?' : ''}`,
         result.htmlLink ? 'Ouvrir' : 'Fermer',
         { duration: 6000 }
-      ).onAction().subscribe(() => {
-        if (result.htmlLink) window.open(result.htmlLink, '_blank');
-      });
+      );
+      if (result.htmlLink) {
+        snack.onAction().subscribe(() => window.open(result.htmlLink, '_blank'));
+      }
     } else {
       this.snackBar.open(`Erreur: ${result.message}`, 'Fermer', { duration: 5000 });
     }

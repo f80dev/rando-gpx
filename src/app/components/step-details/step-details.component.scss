@@ -29,6 +29,7 @@
   display: flex;
   gap: 8px;
   flex-shrink: 0;
+  align-items: center;
 }
 
 .details-grid {
@@ -91,4 +92,67 @@
   padding: 24px;
   text-align: center;
   color: #666;
+}
+
+// ── Boutons d'ajout de lieux ──────────────────────────────────
+
+.add-place-btn {
+  width: 100%;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #2E7D32 !important;
+  border-color: #2E7D32 !important;
+}
+
+.meal-slot-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  app-meal-slot {
+    flex: 1;
+  }
+}
+
+.meal-slot-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  min-width: 48px;
+  padding: 4px 0;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #888;
+  }
+}
+
+.add-meal-btn {
+  color: #2E7D32 !important;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 20px;
+  }
+}
+
+// ── Auth button ───────────────────────────────────────────────
+
+.auth-btn {
+  &.connected {
+    color: #2E7D32 !important;
+    border-color: #2E7D32 !important;
+  }
+}
+
+// ── Bouton primaire accent ────────────────────────────────────
+
+[color="accent"] {
+  background-color: #2E7D32 !important;
+  color: white !important;
 }
