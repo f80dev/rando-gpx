@@ -1,25 +1,41 @@
 .export-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 8px 0;
+  gap: 10px;
+  padding: 6px 0;
+
+  @media (min-width: 600px) {
+    gap: 12px;
+    padding: 8px 0;
+  }
 }
 
 .export-option {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
+  gap: 12px;
+  padding: 12px;
   text-align: left;
   width: 100%;
   border-radius: 12px;
   height: auto;
 
+  @media (min-width: 600px) {
+    gap: 16px;
+    padding: 16px;
+  }
+
   mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
     color: #2E7D32;
+
+    @media (min-width: 600px) {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
   }
 }
 
@@ -29,11 +45,19 @@
   gap: 2px;
 
   strong {
-    font-size: 15px;
+    font-size: 14px;
+
+    @media (min-width: 600px) {
+      font-size: 15px;
+    }
   }
 
   span {
-    font-size: 13px;
+    font-size: 12px;
     color: #666;
+
+    @media (min-width: 600px) {
+      font-size: 13px;
+    }
   }
 }

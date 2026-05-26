@@ -1,48 +1,94 @@
 .meal-card {
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px;
+
+  @media (min-width: 600px) {
+    padding: 16px;
+  }
 }
 
 .slot-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 8px;
+
+  @media (min-width: 600px) {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
 }
 
 .slot-icon {
   color: var(--mdc-filled-button-label-text-color, #2E7D32);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+
+  @media (min-width: 600px) {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .slot-label {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 13px;
+
+  @media (min-width: 600px) {
+    font-size: 15px;
+  }
 }
 
 .meal-info {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+
+  @media (min-width: 600px) {
+    margin-bottom: 12px;
+  }
 }
 
 .meal-name {
-  margin: 4px 0;
+  margin: 3px 0;
   font-weight: 500;
+  font-size: 13px;
+
+  @media (min-width: 600px) {
+    font-size: 14px;
+    margin: 4px 0;
+  }
 }
 
 .meal-price {
   margin: 2px 0;
-  font-size: 14px;
+  font-size: 13px;
   color: #2E7D32;
   font-weight: 700;
+
+  @media (min-width: 600px) {
+    font-size: 14px;
+  }
 }
 
 .meal-desc {
-  margin: 4px 0;
-  font-size: 13px;
+  margin: 3px 0;
+  font-size: 12px;
   color: #666;
+
+  @media (min-width: 600px) {
+    font-size: 13px;
+    margin: 4px 0;
+  }
 }
 
 .empty-state {
-  padding: 12px 0;
+  padding: 10px 0;
   color: #999;
-  font-size: 14px;
+  font-size: 13px;
+
+  @media (min-width: 600px) {
+    padding: 12px 0;
+    font-size: 14px;
+  }
 }

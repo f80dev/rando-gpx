@@ -1,6 +1,10 @@
 .stage-card {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   border-radius: 12px;
+
+  @media (min-width: 600px) {
+    margin-bottom: 16px;
+  }
 
   &.disabled {
     opacity: 0.5;
@@ -12,67 +16,108 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background-color: var(--mdc-filled-button-container-color);
   color: white;
   font-weight: 700;
-  font-size: 13px;
-  margin-right: 12px;
+  font-size: 12px;
+  margin-right: 10px;
   flex-shrink: 0;
+
+  @media (min-width: 600px) {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    margin-right: 12px;
+  }
 }
 
 mat-card-header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-bottom: 8px;
+  padding-bottom: 6px;
+
+  @media (min-width: 600px) {
+    padding-bottom: 8px;
+  }
 }
 
 mat-card-title {
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
+
+  @media (min-width: 600px) {
+    font-size: 16px !important;
+  }
 }
 
 mat-card-subtitle {
-  font-size: 13px !important;
+  font-size: 12px !important;
   color: var(--mdc-filled-button-label-text-color) !important;
+
+  @media (min-width: 600px) {
+    font-size: 13px !important;
+  }
 }
 
 .pois {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+
+  @media (min-width: 600px) {
+    margin-bottom: 8px;
+  }
 }
 
 mat-chip {
-  font-size: 12px;
+  font-size: 11px;
+
+  @media (min-width: 600px) {
+    font-size: 12px;
+  }
 }
 
 mat-icon.poi-icon {
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+
+  @media (min-width: 600px) {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .more-pois {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--mdc-filled-button-label-text-color);
   align-self: center;
+
+  @media (min-width: 600px) {
+    font-size: 12px;
+  }
 }
 
 .expanded-content {
-  padding-top: 12px;
+  padding-top: 10px;
+
+  @media (min-width: 600px) {
+    padding-top: 12px;
+  }
 
   p {
     margin: 4px 0;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   ul {
-    padding-left: 20px;
+    padding-left: 18px;
     margin: 4px 0;
   }
 
@@ -80,7 +125,7 @@ mat-icon.poi-icon {
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 13px;
+    font-size: 12px;
     margin-bottom: 2px;
   }
 }
@@ -92,5 +137,5 @@ mat-icon.poi-icon {
 mat-card-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 2px;
 }

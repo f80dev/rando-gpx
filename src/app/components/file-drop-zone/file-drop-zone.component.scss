@@ -1,16 +1,20 @@
 .drop-zone {
-  border: 2px dashed var(--mdc Filippo, 0.5);
+  border: 2px dashed var(--mdc-filled-button-label-text-color, rgba(0,0,0,0.5));
   border-radius: 12px;
-  padding: 48px 24px;
+  padding: 32px 16px;
   text-align: center;
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
   background-color: var(--mat-form-field-container-surface-tinting-layer);
   position: relative;
 
+  @media (min-width: 600px) {
+    padding: 48px 24px;
+  }
+
   &:hover,
   &.dragging {
-    border-color: var(--mdc- Filippo --primary);
+    border-color: var(--mdc-filled-button-container-color, #2E7D32);
     background-color: var(--mat-form-field-focus-state-layer-opacity);
   }
 
@@ -28,29 +32,48 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+
+  @media (min-width: 600px) {
+    gap: 8px;
+  }
 }
 
 .icon {
-  font-size: 48px;
-  width: 48px;
-  height: 48px;
-  color: var(--mdc- Filippo --secondary);
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: var(--mdc-filled-button-label-text-color, #666);
+
+  @media (min-width: 600px) {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
 }
 
 .label {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   margin: 0;
-  color: var(--mdc- Filippo --on-surface);
+  color: var(--mdc-filled-button-label-text-color);
+
+  @media (min-width: 600px) {
+    font-size: 16px;
+  }
 }
 
 .sublabel {
-  font-size: 14px;
-  color: var(--mdc- Filippo --on-surface-variant);
-  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--mdc-filled-button-label-text-color);
+  margin: 0 0 6px;
+
+  @media (min-width: 600px) {
+    font-size: 14px;
+    margin: 0 0 8px;
+  }
 }
 
 button {
-  margin-top: 8px;
+  margin-top: 6px;
 }

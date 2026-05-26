@@ -1,13 +1,23 @@
 .places-search-dialog {
-  min-width: 480px;
-  max-width: 600px;
+  min-width: 320px;
+  max-width: 100%;
+  width: 100%;
+
+  @media (min-width: 600px) {
+    min-width: 480px;
+    max-width: 600px;
+  }
 }
 
 [mat-dialog-title] {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
+  font-size: 16px;
+
+  @media (min-width: 600px) {
+    font-size: 18px;
+  }
 
   mat-icon {
     color: #2E7D32;
@@ -17,10 +27,16 @@
 .search-controls {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-bottom: 16px;
+  gap: 10px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--mdc-theme-outline-variant);
   margin-bottom: 8px;
+
+  @media (min-width: 600px) {
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 8px;
+  }
 }
 
 .search-row {
@@ -34,23 +50,32 @@
 }
 
 .type-field {
-  width: 160px;
+  width: 130px;
   flex-shrink: 0;
+
+  @media (min-width: 600px) {
+    width: 160px;
+  }
 }
 
 .radius-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   padding: 0 4px;
 }
 
 .radius-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--mdc-theme-on-surface-variant);
   white-space: nowrap;
-  min-width: 90px;
+  min-width: 80px;
+
+  @media (min-width: 600px) {
+    font-size: 14px;
+    min-width: 90px;
+  }
 }
 
 .radius-slider {
@@ -61,14 +86,25 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
+  font-size: 11px;
   color: #888;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
+
+  @media (min-width: 600px) {
+    font-size: 12px;
+    margin: 0 0 8px;
+  }
 
   mat-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+
+    @media (min-width: 600px) {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 
@@ -78,21 +114,37 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 32px 16px;
+  gap: 10px;
+  padding: 24px 12px;
   text-align: center;
   color: #666;
 
+  @media (min-width: 600px) {
+    gap: 12px;
+    padding: 32px 16px;
+  }
+
   mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
     color: #bbb;
+
+    @media (min-width: 600px) {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
   }
 
   p {
     margin: 0;
     max-width: 320px;
+    font-size: 13px;
+
+    @media (min-width: 600px) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -101,7 +153,7 @@
 }
 
 .results-header {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: #888;
   padding: 4px 0;
@@ -110,24 +162,33 @@
 
 .place-item {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   padding: 4px 0;
 }
 
 .place-icon {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   background: #e8f5e9;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 
+  @media (min-width: 600px) {
+    width: 36px;
+    height: 36px;
+  }
+
   mat-icon {
-    font-size: 20px;
+    font-size: 18px;
     color: #2E7D32;
+
+    @media (min-width: 600px) {
+      font-size: 20px;
+    }
   }
 }
 
@@ -140,17 +201,25 @@
 }
 
 .place-name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
+
+  @media (min-width: 600px) {
+    font-size: 15px;
+  }
 }
 
 .place-address {
-  font-size: 12px;
+  font-size: 11px;
   color: #888;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (min-width: 600px) {
+    font-size: 12px;
+  }
 }
 
 .place-meta {
@@ -165,25 +234,45 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #f57f17;
 
+  @media (min-width: 600px) {
+    font-size: 13px;
+  }
+
   mat-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+
+    @media (min-width: 600px) {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 
 .place-price {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: #2E7D32;
+
+  @media (min-width: 600px) {
+    font-size: 13px;
+  }
 }
 
 mat-chip[size="small"] {
-  font-size: 11px;
-  height: 20px;
-  line-height: 20px;
+  font-size: 10px;
+  height: 18px;
+  line-height: 18px;
+
+  @media (min-width: 600px) {
+    font-size: 11px;
+    height: 20px;
+    line-height: 20px;
+  }
 }

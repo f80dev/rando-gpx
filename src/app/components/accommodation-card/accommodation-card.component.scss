@@ -1,6 +1,10 @@
 .acc-card {
   border-radius: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+
+  @media (min-width: 600px) {
+    margin-bottom: 12px;
+  }
 }
 
 .type-icon {
@@ -12,15 +16,25 @@
 .price {
   font-weight: 700;
   color: var(--mdc-filled-button-label-text-color, #2E7D32);
+  font-size: 14px;
+
+  @media (min-width: 600px) {
+    font-size: 15px;
+  }
 }
 
 .rating {
-  margin-left: 8px;
+  margin-left: 6px;
   color: #f9a825;
+  font-size: 13px;
 }
 
 .badges {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+
+  @media (min-width: 600px) {
+    margin-bottom: 8px;
+  }
 }
 
 .train-chip {
@@ -29,13 +43,23 @@
 }
 
 mat-icon.train {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+
+  @media (min-width: 600px) {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .description {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--mdc-filled-button-disabled-label-text-color, #666);
   margin: 0;
+
+  @media (min-width: 600px) {
+    font-size: 14px;
+  }
 }

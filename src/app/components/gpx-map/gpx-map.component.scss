@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 400px;
+  min-height: 200px;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -10,19 +10,27 @@
 .map-container {
   width: 100%;
   height: 100%;
-  min-height: 400px;
+  min-height: 200px;
 }
 
 .poi-popup {
   position: absolute;
-  bottom: 16px;
-  left: 16px;
+  bottom: 12px;
+  left: 12px;
   background: white;
-  padding: 12px 16px;
+  padding: 10px 14px;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  max-width: 280px;
+  max-width: 240px;
+  font-size: 13px;
+
+  @media (min-width: 600px) {
+    bottom: 16px;
+    left: 16px;
+    padding: 12px 16px;
+    max-width: 280px;
+  }
 
   strong {
     display: block;
@@ -31,17 +39,26 @@
 
   .poi-type {
     display: inline-block;
-    font-size: 12px;
+    font-size: 11px;
     color: #666;
     background: #f5f5f5;
-    padding: 2px 8px;
+    padding: 2px 6px;
     border-radius: 4px;
     margin-bottom: 4px;
+
+    @media (min-width: 600px) {
+      font-size: 12px;
+      padding: 2px 8px;
+    }
   }
 
   p {
-    margin: 8px 0 0;
-    font-size: 14px;
+    margin: 6px 0 0;
+    font-size: 13px;
     color: #333;
+
+    @media (min-width: 600px) {
+      font-size: 14px;
+    }
   }
 }
