@@ -4,6 +4,7 @@ import {
   output,
   signal,
   ElementRef,
+  ViewChild,
   inject,
   OnDestroy,
   AfterViewInit,
@@ -35,6 +36,7 @@ export class GpxMapComponent implements AfterViewInit, OnDestroy {
 
   selectedPoi = signal<POI | null>(null);
 
+  @ViewChild('mapEl') mapEl!: ElementRef<HTMLDivElement>;
   private el = inject(ElementRef);
 
   constructor() {
@@ -42,7 +44,12 @@ export class GpxMapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.initMap(this.el);
+    // ViewChild est résolu après le rendering complet du @if parent
+    requestAnimationFrame(() => {
+      if (this.mapEl) {
+        this.initMap(this.mapEl);
+      }
+    });
   }
 
   initMap(el: ElementRef<HTMLDivElement>): void {
@@ -62,6 +69,9 @@ export class GpxMapComponent implements AfterViewInit, OnDestroy {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 18,
     }).addTo(this.map);
+
+    // Leaflet bug: after @if show, the map renders offset → force a resize recalc
+    requestAnimationFrame(() => this.map?.invalidateSize({ pan: false }));
 
     this.initialized = true;
     this.updateMap();
