@@ -83,21 +83,12 @@
                   @if (commune.attractivite_score !== undefined) {
                     <div class="commune-score" [class.high]="commune.attractivite_score! > 100"
                          [class.medium]="commune.attractivite_score! > 30 && commune.attractivite_score! <= 100">
-                      <span class="score-value">{{ commune.attractivite_score }}</span>
+                      <span class="score-value"
+                            [matTooltip]="getScoreTooltip(commune)"
+                            matTooltipPosition="above">
+                        {{ commune.attractivite_score }}
+                      </span>
                       <span class="score-label">attract.</span>
-                      @if (commune.score_breakdown) {
-                        <div class="score-detail">
-                          @if (commune.score_breakdown.patrimoine !== '0×8=0') {
-                            <span class="breakdown pat">Pat. {{ commune.score_breakdown.patrimoine }}</span>
-                          }
-                          @if (commune.score_breakdown.nature !== '0×4=0') {
-                            <span class="breakdown nat">Nat. {{ commune.score_breakdown.nature }}</span>
-                          }
-                          @if (commune.score_breakdown.restauration !== '0×2=0') {
-                            <span class="breakdown rest">Rest. {{ commune.score_breakdown.restauration }}</span>
-                          }
-                        </div>
-                      }
                     </div>
                   } @else {
                     <div class="commune-score no-data">—</div>

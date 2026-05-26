@@ -15,6 +15,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItineraryService } from '../../services/itinerary.service';
 import { GpxParserService } from '../../services/gpx-parser.service';
 import { CommunesService, TraceCommune } from '../../services/communes.service';
@@ -42,7 +43,7 @@ import { GpxData, ActivityType } from '../../models/itinerary.model';
     MatNativeDateModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatIconModule,
+    MatTooltipModule,
     GpxMapComponent,
     FileDropZoneComponent,
   ],
@@ -133,6 +134,18 @@ export class StepPreferencesComponent implements OnInit {
     this.gpxData.set(null);
     this.communes.set([]);
     this.itineraryService.setGpxData(null);
+  }
+
+  getScoreTooltip(commune: TraceCommune): string {
+    if (!commune.score_breakdown) return '';
+    const b = commune.score_breakdown;
+    const parts: string[] = [];
+    if (b.patrimoine && b.patrimoine !== '0×8=0') parts.push(`🏛 Pat. ${b.patrimoine}`);
+    if (b.nature && b.nature !== '0×4=0') parts.push(`🌿 Nat. ${b.nature}`);
+    if (b.restauration && b.restauration !== '0×2=0') parts.push(`🍽 Rest. ${b.restauration}`);
+    if (b.evenement && b.evenement !== '0×3=0') parts.push(`🎪 Évén. ${b.evenement}`);
+    if (b.hebergement && b.hebergement !== '0×1=0') parts.push(`🛏 Héberg. ${b.hebergement}`);
+    return parts.join('\n');
   }
 
   onSubmit(): void {
