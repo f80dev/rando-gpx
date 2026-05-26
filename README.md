@@ -1,59 +1,94 @@
-# RandoGpx
+# RandoGPX — Générateur d'itinéraires rando & vélo
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.10.
+**Application Angular 21 + Angular Material** pour construire des programmes de randonnée pedestre ou cyclosportive en suivant une trace GPX.
 
-## Development server
+## Parcours utilisateur
 
-To start a local development server, run:
+```
+1. Préférences   →   2. Génération étapes   →   3. Revue / modifications   →   4. Repas & hébergement
+```
+
+**1. Écran préférences**
+- Import GPX (drag & drop)
+- Distance max / jour (km)
+- Dénivelé max / étape (m)
+- Heure de départ matinal
+- Prix hébergement max (€)
+- Prix repas max (€)
+- Gare requise au départ / arrivée
+- Ville de résidence (si gare)
+- Date de début + nombre de jours
+
+**2. Génération automatique (agent Hermes)**
+Pour chaque étape :
+- Distance, durée, dénivelé
+- Trace GPX visualisée sur carte Leaflet
+- Points touristiques principaux
+
+**3. Revue et modifications**
+- Drag & drop pour réorganiser les étapes
+- Édition inline : distance, durée, stop inclus/exclus
+- Aperçu temps réel sur la carte
+
+**4. Hébergements & restauration (agent Hermes)**
+- Repas midi et dîner : nom, type, prix, note
+- Hébergement : nom, prix, photos, note
+
+## Stack
+
+| Technologie | Version |
+|---|---|
+| Angular | 21.2.x |
+| Angular Material | 21.2.x |
+| Leaflet | 1.9.x |
+| Angular CLI | 21.2.x |
+| API backend | Flask / SQLite (datatourisme.db) |
+
+## Développement
 
 ```bash
+git clone https://github.com/f80dev/rando-gpx.git
+cd rando-gpx
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+API backend (Flask) :
 ```bash
-ng generate component component-name
+cd ../rando-gpx-api
+python3 server.py
+# → http://localhost:5000
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Architecture
 
-```bash
-ng generate --help
+```
+src/app/
+├── components/
+│   ├── step-preferences/     # Écran 1 — préférences + import GPX
+│   ├── step-review/           # Écran 2 — revue des étapes générées
+│   ├── step-editor/          # Écran 3 — modification des étapes
+│   ├── step-accommodation/   # Écran 4 — repas & hébergement
+│   ├── gpx-map/              # Carte Leaflet avec trace GPX
+│   └── accommodation-card/   # Carte hébergement / repas
+├── services/
+│   ├── communes.service.ts   # Appels API /api/trace/communes
+│   ├── gpx-parser.service.ts # Parsing GPX
+│   ├── itinerary.service.ts  # Modèle de données itinéraire
+│   └── hermes-agent.service.ts # Communication agent IA
+└── models/
+    └── itinerary.model.ts    # Types TypeScript
 ```
 
-## Building
+## API endpoints
 
-To build the project run:
+| Méthode | Route | Description |
+|---|---|---|
+| POST | `/api/trace/communes` | Upload GPX → renvoie communes traversées |
+| GET | `/api/health` | Health check |
+| GET | `/api/commune/<insee>` | Détail d'une commune (POIs, attractivité) |
+| GET | `/api/attractivite` | Classement des communes par score |
+| GET | `/api/pois` | Recherche de POIs (lat/lon ou code_insee) |
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+*Propulsé par Hermes Agent — génération automatique d'itinéraires personnalisés.*
