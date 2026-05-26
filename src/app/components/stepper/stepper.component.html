@@ -1,0 +1,43 @@
+<div class="stepper-wrapper">
+  <!-- Top App Bar -->
+  <mat-toolbar class="app-toolbar">
+    <button mat-icon-button (click)="resetItinerary()" matTooltip="Nouveau programme">
+      <mat-icon>add</mat-icon>
+    </button>
+    <span class="app-title">RandoGPX</span>
+    <span class="spacer"></span>
+    <span class="step-indicator">{{ currentStepIndex() + 1 }} / {{ steps.length }}</span>
+  </mat-toolbar>
+
+  <!-- Stepper Horizontal -->
+  <div class="stepper-container">
+    <nav class="stepper-nav" role="navigation" aria-label="Étapes">
+      @for (step of steps; track step.label; let i = $index) {
+        <button
+          class="step-button"
+          [class.active]="currentStepIndex() === i"
+          [class.completed]="currentStepIndex() > i"
+          (click)="goToStep(i)"
+          [attr.aria-current]="currentStepIndex() === i ? 'step' : null"
+        >
+          <div class="step-icon">
+            @if (currentStepIndex() > i) {
+              <mat-icon>check</mat-icon>
+            } @else {
+              <mat-icon>{{ step.icon }}</mat-icon>
+            }
+          </div>
+          <span class="step-label">{{ step.label }}</span>
+        </button>
+        @if (i < steps.length - 1) {
+          <div class="step-connector" [class.completed]="currentStepIndex() > i"></div>
+        }
+      }
+    </nav>
+  </div>
+
+  <!-- Content Area -->
+  <div class="stepper-content">
+    <router-outlet />
+  </div>
+</div>

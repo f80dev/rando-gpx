@@ -1,0 +1,91 @@
+<div class="step-details">
+  <div class="details-header">
+    <div class="header-text">
+      <h1>Hébergements & Repas</h1>
+      <p>Vérifiez et ajustez les suggestions pour chaque étape</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon> Retour
+      </button>
+      <button mat-raised-button color="primary" (click)="openExportDialog()">
+        <mat-icon>download</mat-icon> Exporter
+      </button>
+    </div>
+  </div>
+
+  <!-- Résumé -->
+  <app-itinerary-summary
+    [stages]="stages()"
+    [preferences]="preferences()"
+  />
+
+  <!-- Contenu 3 colonnes (desktop) / tabs (mobile) -->
+  <div class="details-grid">
+    <!-- Colonne hébergements -->
+    <div class="column acc-column">
+      <h2 class="column-title">Hébergements</h2>
+      @if (isLoading()) {
+        <div class="loading-state">
+          <p>Génération en cours…</p>
+        </div>
+      }
+      @for (stage of stages(); track stage.id; let i = $index) {
+        <div class="stage-section">
+          <p class="stage-label">Nuit {{ i + 1 }} — {{ stage.name }}</p>
+          @if (getAccommodationForStage(stage.id); as acc) {
+            <app-accommodation-card
+              [accommodation]="acc"
+              (change)="onChangeAccommodation($event)"
+            />
+          } @else {
+            <div class="no-accommodation">
+              <p>Aucun hébergement trouvé</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Colonne carte -->
+    <div class="column map-column">
+      <div class="map-container">
+        <app-gpx-map
+          [gpxData]="itineraryService.gpxData()"
+          [stages]="stages()"
+          [interactive]="true"
+          [showStageMarkers]="true"
+        />
+      </div>
+    </div>
+
+    <!-- Colonne repas -->
+    <div class="column meals-column">
+      <h2 class="column-title">Repas</h2>
+      @if (isLoading()) {
+        <div class="loading-state">
+          <p>Génération en cours…</p>
+        </div>
+      }
+      @for (stage of stages(); track stage.id) {
+        <div class="stage-section">
+          <p class="stage-label">{{ stage.name }}</p>
+          <div class="meal-slots">
+            @if (getMealsForStage(stage.id); as mealsData) {
+              <app-meal-slot
+                [meal]="mealsData.lunch"
+                slot="lunch"
+                (change)="onChangeMeal($event, stage.id, 'lunch')"
+              />
+              <app-meal-slot
+                [meal]="mealsData.dinner"
+                slot="dinner"
+                (change)="onChangeMeal($event, stage.id, 'dinner')"
+              />
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

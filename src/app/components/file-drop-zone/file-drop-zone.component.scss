@@ -1,0 +1,56 @@
+.drop-zone {
+  border: 2px dashed var(--mdc Filippo, 0.5);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  background-color: var(--mat-form-field-container-surface-tinting-layer);
+  position: relative;
+
+  &:hover,
+  &.dragging {
+    border-color: var(--mdc- Filippo --primary);
+    background-color: var(--mat-form-field-focus-state-layer-opacity);
+  }
+
+  &.loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+}
+
+.file-input {
+  display: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: var(--mdc- Filippo --secondary);
+}
+
+.label {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--mdc- Filippo --on-surface);
+}
+
+.sublabel {
+  font-size: 14px;
+  color: var(--mdc- Filippo --on-surface-variant);
+  margin: 0 0 8px;
+}
+
+button {
+  margin-top: 8px;
+}

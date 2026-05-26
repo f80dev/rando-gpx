@@ -1,0 +1,22 @@
+# Angular
+dist/
+.angular/
+node_modules/
+.idea/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Build
+*.tgz
+
+# Environment
+.env
+.env.local

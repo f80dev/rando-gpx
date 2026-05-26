@@ -1,0 +1,43 @@
+.full-width {
+  width: 100%;
+}
+
+.form-section {
+  margin: 16px 0;
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+}
+
+.poi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.poi-item {
+  display: flex;
+  align-items: center;
+}
+
+.poi-type-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  color: #666;
+}
+
+.advanced-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--mdc-theme-outline-variant);
+}

@@ -1,0 +1,20 @@
+@use '@angular/material' as mat;
+
+// Nature Randonnée — Material Design 3 custom theme
+// Vert forêt, palette verte + blue tertiaire
+
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$green-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    plain-family: 'Google Sans',
+    brand-family: 'Google Sans',
+  ),
+));
+
+html {
+  @include mat.all-component-themes($light-theme);
+}

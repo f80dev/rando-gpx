@@ -1,0 +1,41 @@
+.acc-card {
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.type-icon {
+  background-color: var(--mat-card-container-color);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.price {
+  font-weight: 700;
+  color: var(--mdc-filled-button-label-text-color, #2E7D32);
+}
+
+.rating {
+  margin-left: 8px;
+  color: #f9a825;
+}
+
+.badges {
+  margin-bottom: 8px;
+}
+
+.train-chip {
+  background-color: #e3f2fd !important;
+  color: #1565C0 !important;
+}
+
+mat-icon.train {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.description {
+  font-size: 14px;
+  color: var(--mdc-filled-button-disabled-label-text-color, #666);
+  margin: 0;
+}

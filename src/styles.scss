@@ -1,0 +1,14 @@
+@use './styles/theme';
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap');
+
+// Reset + base
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Google Sans', 'Roboto', sans-serif;
+  background-color: #F5F5F0;
+  color: #1C1B1F;
+}

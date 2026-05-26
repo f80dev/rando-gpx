@@ -1,0 +1,38 @@
+.full-width {
+  width: 100%;
+}
+
+.meal-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.meal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meal-type {
+  font-size: 12px;
+  color: #666;
+  text-transform: capitalize;
+}
+
+.meal-meta {
+  text-align: right;
+}
+
+.meal-price {
+  font-weight: 700;
+  color: #2E7D32;
+}
+
+.no-results {
+  text-align: center;
+  color: #999;
+  padding: 24px;
+}

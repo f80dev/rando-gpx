@@ -1,0 +1,33 @@
+<div
+  class="drop-zone"
+  [class.dragging]="isDragging()"
+  [class.loading]="isLoading()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+  <input
+    #fileInput
+    type="file"
+    accept=".gpx"
+    class="file-input"
+    (change)="onFileInput($event)"
+  />
+
+  @if (isLoading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <div class="content">
+      <mat-icon class="icon">hourglass_empty</mat-icon>
+      <p class="label">Chargement…</p>
+    </div>
+  } @else {
+    <div class="content">
+      <mat-icon class="icon"> upload_file </mat-icon>
+      <p class="label">Glissez votre fichier GPX ici</p>
+      <p class="sublabel">ou cliquez pour parcourir</p>
+      <button mat-stroked-button color="primary" type="button" (click)="openFilePicker(fileInput)">
+        <mat-icon>folder_open</mat-icon> Parcourir
+      </button>
+    </div>
+  }
+</div>

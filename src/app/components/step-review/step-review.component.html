@@ -1,0 +1,61 @@
+<div class="step-review">
+  <div class="review-header">
+    <div class="header-text">
+      <h1>Vérifiez votre programme</h1>
+      <p>Modifiez ou excluez des étapes selon vos envies</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon> Retour
+      </button>
+      <button mat-raised-button color="primary" (click)="goToDetails()">
+        Hébergements & Repas <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Résumé global -->
+  <app-itinerary-summary
+    [stages]="stages()"
+    [preferences]="preferences()"
+  />
+
+  <div class="review-layout">
+    <!-- Carte -->
+    <div class="map-section">
+      <div class="map-container">
+        <app-gpx-map
+          [gpxData]="itineraryService.gpxData()"
+          [stages]="stages()"
+          [pois]="allPois()"
+          [interactive]="true"
+          [showStageMarkers]="true"
+        />
+      </div>
+    </div>
+
+    <!-- Liste des étapes -->
+    <div class="stages-section">
+      @if (stages().length === 0) {
+        <div class="empty-state">
+          <mat-icon>explore_off</mat-icon>
+          <p>Aucune étape générée. Retournez à l'étape précédente.</p>
+          <button mat-stroked-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon> Étape 2
+          </button>
+        </div>
+      } @else {
+        <h2 class="section-title">Étapes ({{ stages().length }})</h2>
+        @for (stage of stages(); track stage.id; let i = $index) {
+          <app-stage-card
+            [stage]="stage"
+            [index]="i"
+            (editStage)="onEditStage($event)"
+            (toggleDisabled)="onToggleDisabled($event)"
+            (viewOnMap)="onViewOnMap($event)"
+          />
+        }
+      }
+    </div>
+  </div>
+</div>

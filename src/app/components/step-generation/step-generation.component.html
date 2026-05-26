@@ -1,0 +1,62 @@
+<div class="step-generation">
+  @if (status() === 'error') {
+    <div class="error-state">
+      <mat-card class="error-card">
+        <mat-card-content>
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          <h2>Erreur de génération</h2>
+          <p>{{ errorMessage() }}</p>
+          <div class="error-actions">
+            <button mat-raised-button color="primary" (click)="retry()">
+              <mat-icon>refresh</mat-icon> Réessayer
+            </button>
+            <button mat-stroked-button (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon> Retour
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  } @else {
+    <!-- Carte Leaflet en fond -->
+    <div class="map-background">
+      <app-gpx-map
+        [gpxData]="itineraryService.gpxData()"
+        [interactive]="false"
+        [showStageMarkers]="false"
+      />
+    </div>
+
+    <!-- Contenu central -->
+    <div class="generation-content">
+      <div class="spinner-container">
+        <mat-spinner diameter="64"></mat-spinner>
+        <h2 class="status-label">
+          @switch (status()) {
+            @case ('parsing') { Analyse en cours… }
+            @case ('generating') { Création du programme… }
+            @case ('success') { Terminé ! }
+          }
+        </h2>
+      </div>
+
+      <!-- Progression -->
+      @if (progressSteps().length > 0) {
+        <div class="progress-steps">
+          @for (step of progressSteps(); track step) {
+            <div class="progress-step">
+              <mat-icon class="step-check">check_circle</mat-icon>
+              <span>{{ step }}</span>
+            </div>
+          }
+          @if (status() === 'success') {
+            <div class="progress-step success">
+              <mat-icon class="step-check">celebration</mat-icon>
+              <span>Programme créé avec succès !</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

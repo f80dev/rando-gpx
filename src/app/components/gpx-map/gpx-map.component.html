@@ -1,0 +1,12 @@
+<div class="map-wrapper" #mapWrapper>
+  <div #mapEl class="map-container"></div>
+  @if (selectedPoi()) {
+    <div class="poi-popup">
+      <strong>{{ selectedPoi()!.name }}</strong>
+      <span class="poi-type">{{ selectedPoi()!.type }}</span>
+      @if (selectedPoi()!.description) {
+        <p>{{ selectedPoi()!.description }}</p>
+      }
+    </div>
+  }
+</div>

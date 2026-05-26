@@ -1,0 +1,72 @@
+<mat-card class="stage-card" [class.disabled]="stage().disabled">
+  <mat-card-header>
+    <div class="stage-number">{{ index() + 1 }}</div>
+    <mat-card-title>{{ stage().name }}</mat-card-title>
+    <mat-card-subtitle>
+      {{ stage().distance }} km · {{ durationFormatted() }} · {{ stage().elevationGain }}m+
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- POI chips -->
+    @if (stage().pois.length > 0) {
+      <div class="pois">
+        @for (poi of stage().pois.slice(0, 5); track poi.name) {
+          <mat-chip-listbox>
+            <mat-chip>
+              <mat-icon matChipAvatar>{{ poiTypeIcon(poi.type) }}</mat-icon>
+              {{ poi.name }}
+            </mat-chip>
+          </mat-chip-listbox>
+        }
+        @if (stage().pois.length > 5) {
+          <span class="more-pois">+{{ stage().pois.length - 5 }} autres</span>
+        }
+      </div>
+    }
+
+    @if (isExpanded()) {
+      <mat-divider></mat-divider>
+      <div class="expanded-content">
+        <p><strong>Dénivelé négatif :</strong> {{ stage().elevationLoss }}m</p>
+        <p><strong>Coordonnées communes :</strong> {{ stage().gpxCoordinates.length }} points</p>
+        @if (stage().pois.length > 0) {
+          <p><strong>Tous les POI :</strong></p>
+          <ul>
+            @for (poi of stage().pois; track poi.name) {
+              <li>
+                <mat-icon class="poi-icon">{{ poiTypeIcon(poi.type) }}</mat-icon>
+                {{ poi.name }}
+                @if (poi.description) {
+                  <span class="poi-desc"> — {{ poi.description }}</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button color="primary" (click)="toggleExpand()">
+      <mat-icon>{{ isExpanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
+      {{ isExpanded() ? 'Réduire' : 'Détails' }}
+    </button>
+    <button mat-button (click)="editStage.emit(stage())">
+      <mat-icon>edit</mat-icon> Modifier
+    </button>
+    <button mat-button (click)="viewOnMap.emit(stage())">
+      <mat-icon>map</mat-icon> Carte
+    </button>
+    <button
+      mat-button
+      [color]="stage().disabled ? 'warn' : 'default'"
+      (click)="toggleDisabled.emit(stage().id)"
+      [matTooltip]="stage().disabled ? 'Réactiver cette étape' : 'Exclure cette étape'"
+    >
+      <mat-icon>{{ stage().disabled ? 'undo' : 'remove_circle_outline' }}</mat-icon>
+      {{ stage().disabled ? 'Réactiver' : 'Exclure' }}
+    </button>
+  </mat-card-actions>
+</mat-card>

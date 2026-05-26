@@ -1,0 +1,159 @@
+<div class="step-preferences">
+  <div class="page-header">
+    <h1>Créer votre programme</h1>
+    <p>Importez votre trace GPX et définissez vos préférences de voyage</p>
+  </div>
+
+  <div class="content-grid">
+    <!-- Colonne gauche : Import GPX -->
+    <div class="column gpx-column">
+      <h2>Votre trace GPX</h2>
+      <app-file-drop-zone
+        (fileSelected)="onGpxFileSelected($event)"
+        (error)="onGpxError($event)"
+      />
+
+      @if (gpxData()) {
+        <div class="gpx-preview">
+          <app-gpx-map
+            [gpxData]="gpxData()!"
+            [interactive]="false"
+            [showStageMarkers]="false"
+          />
+          <div class="gpx-stats">
+            <div class="gpx-stat">
+              <mat-icon>straighten</mat-icon>
+              <span>{{ gpxData()!.totalDistance | number:'1.1-1' }} km</span>
+            </div>
+            <div class="gpx-stat">
+              <mat-icon>terrain</mat-icon>
+              <span>+{{ gpxData()!.totalElevationGain }}m</span>
+              <span>-{{ gpxData()!.totalElevationLoss }}m</span>
+            </div>
+            <div class="gpx-stat">
+              <mat-icon>place</mat-icon>
+              <span>{{ gpxData()!.trackpoints.length }} points</span>
+            </div>
+          </div>
+          <p class="gpx-name">{{ gpxData()!.name }}</p>
+        </div>
+      }
+    </div>
+
+    <!-- Colonne droite : Paramètres -->
+    <div class="column params-column" [formGroup]="form">
+      <h2>Paramètres</h2>
+
+      <!-- Activité -->
+      <div class="form-section">
+        <label class="section-label">Activité</label>
+        <mat-button-toggle-group formControlName="activityType" class="activity-toggle">
+          <mat-button-toggle value="bike">
+            <mat-icon>directions_bike</mat-icon> Vélo
+          </mat-button-toggle>
+          <mat-button-toggle value="hike">
+            <mat-icon>hiking</mat-icon> Randonnée
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Distance max -->
+      <div class="form-section">
+        <label class="section-label">
+          Distance max/jour : {{ form.get('maxDistancePerDay')?.value }} km
+        </label>
+        <mat-slider min="20" max="150" step="5" class="full-width">
+          <input matSliderThumb formControlName="maxDistancePerDay" />
+        </mat-slider>
+      </div>
+
+      <!-- Dénivelé max -->
+      <div class="form-section">
+        <label class="section-label">
+          Dénivelé max/étape : {{ form.get('maxElevationPerDay')?.value }} m
+        </label>
+        <mat-slider min="100" max="2000" step="50" class="full-width">
+          <input matSliderThumb formControlName="maxElevationPerDay" />
+        </mat-slider>
+      </div>
+
+      <!-- Heure de départ -->
+      <div class="form-section">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Heure de départ</mat-label>
+          <input matInput type="time" formControlName="departureTime" />
+        </mat-form-field>
+      </div>
+
+      <!-- Prix hébergement -->
+      <div class="form-section">
+        <label class="section-label">
+          Prix max hébergement : {{ form.get('maxAccommodationPrice')?.value }} €/nuit
+        </label>
+        <mat-slider min="30" max="200" step="5" class="full-width">
+          <input matSliderThumb formControlName="maxAccommodationPrice" />
+        </mat-slider>
+      </div>
+
+      <!-- Prix repas -->
+      <div class="form-section">
+        <label class="section-label">
+          Prix max repas : {{ form.get('maxMealPrice')?.value }} €/repas
+        </label>
+        <mat-slider min="10" max="60" step="2" class="full-width">
+          <input matSliderThumb formControlName="maxMealPrice" />
+        </mat-slider>
+      </div>
+
+      <!-- Gare départ/arrivée -->
+      <div class="form-section">
+        <mat-checkbox formControlName="needTrainOnStartEnd">
+          Gare au départ et à l'arrivée
+        </mat-checkbox>
+      </div>
+
+      @if (form.get('needTrainOnStartEnd')?.value) {
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ville de départ (si différente)</mat-label>
+            <input matInput formControlName="homeCity" placeholder="Ex: Paris" />
+          </mat-form-field>
+        </div>
+      }
+
+      <!-- Date de début -->
+      <div class="form-section">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date de début</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="startDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker" />
+          <mat-datepicker #picker />
+        </mat-form-field>
+      </div>
+
+      <!-- Nombre de jours -->
+      <div class="form-section">
+        <label class="section-label">
+          Nombre de jours : {{ form.get('numberOfDays')?.value }}
+        </label>
+        <mat-slider min="1" max="21" step="1" class="full-width">
+          <input matSliderThumb formControlName="numberOfDays" />
+        </mat-slider>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-section">
+        <button
+          mat-raised-button
+          color="primary"
+          class="submit-btn"
+          [disabled]="!gpxData()"
+          (click)="onSubmit()"
+        >
+          <mat-icon>auto_awesome</mat-icon>
+          Générer mon programme
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

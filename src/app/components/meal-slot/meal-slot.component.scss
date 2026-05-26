@@ -1,0 +1,48 @@
+.meal-card {
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.slot-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.slot-icon {
+  color: var(--mdc-filled-button-label-text-color, #2E7D32);
+}
+
+.slot-label {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.meal-info {
+  margin-bottom: 12px;
+}
+
+.meal-name {
+  margin: 4px 0;
+  font-weight: 500;
+}
+
+.meal-price {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #2E7D32;
+  font-weight: 700;
+}
+
+.meal-desc {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.empty-state {
+  padding: 12px 0;
+  color: #999;
+  font-size: 14px;
+}
