@@ -126,10 +126,23 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--mdc-filled-button-label-text-color);
-  margin: 0;
+  margin: 8px 0 4px;
 
   @media (min-width: 600px) {
     font-size: 14px;
+  }
+}
+
+.change-gpx-btn {
+  width: 100%;
+  margin-top: 8px;
+  color: #666;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
   }
 }
 

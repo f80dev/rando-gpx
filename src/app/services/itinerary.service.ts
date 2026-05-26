@@ -64,7 +64,7 @@ export class ItineraryService {
   readonly hasGpx = computed(() => this._state().gpxData !== null);
 
   // ─── Mutations ─────────────────────────────────────────────
-  setGpxData(gpxData: GpxData): void {
+  setGpxData(gpxData: GpxData | null): void {
     this._state.update((s) => ({ ...s, gpxData }));
   }
 

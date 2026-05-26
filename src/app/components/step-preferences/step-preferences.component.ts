@@ -129,6 +129,12 @@ export class StepPreferencesComponent implements OnInit {
     this.snackBar.open(message, 'Fermer', { duration: 4000 });
   }
 
+  clearGpx(): void {
+    this.gpxData.set(null);
+    this.communes.set([]);
+    this.itineraryService.setGpxData(null);
+  }
+
   onSubmit(): void {
     const formValue = this.form.value;
     this.itineraryService.setPreferences({

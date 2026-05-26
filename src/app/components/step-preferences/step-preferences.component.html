@@ -45,6 +45,10 @@
             </div>
           </div>
           <p class="gpx-name">{{ gpxData()!.name }}</p>
+          <button mat-stroked-button class="change-gpx-btn" (click)="clearGpx()">
+            <mat-icon>swap_horiz</mat-icon>
+            Changer de trace
+          </button>
         </div>
       }
 
